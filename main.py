@@ -19,6 +19,7 @@ import random
 import sys
 import neat
 import math
+import time
 
 pygame.init()
 
@@ -27,6 +28,8 @@ screen_height = 600
 screen_width = 1100
 screen = pygame.display.set_mode((screen_width,screen_height),pygame.RESIZABLE)
 
+#get current time
+mytime = time.localtime()
 #set title
 pygame.display.set_caption('DINO RUN')
 
@@ -307,9 +310,13 @@ def eval_genomes(genomes, config):
                 pygame.quit()
                 sys.exit()
         
+        #reset screen
+        if mytime.tm_hour >= 5 and mytime.tm_hour <= 16:
+            screen.fill((255, 255, 255))
+            print("if")
+        else:
+            screen.fill((25, 25, 25))   
         
-        screen.fill((25, 25, 25))
-        #screen.fill((255,255,255))   #reset screen   
         userInput = pygame.key.get_pressed()
 
         
@@ -397,17 +404,30 @@ def menu(death_count):
     global points
     run = True
     while run:
-        screen.fill((50, 50, 50))
+        
+        if mytime.tm_hour >= 5 and mytime.tm_hour <= 16:
+            screen.fill((255, 255, 255))
+        else:
+            screen.fill((50, 50, 50))
+            #print("else block")
+            
+        
         font = pygame.font.Font('freesansbold.ttf', 30)
 
-        if death_count == 0:
-            text = font.render("Press any Key to Start", True, (0, 255, 0))
-        elif death_count > 0:
-            text = font.render("Press any Key to Restart", True, (0, 255, 0))
-            score = font.render("Your Score: " + str(points), True, (0, 255, 0))
-            scoreRect = score.get_rect()
-            scoreRect.center = (screen_width // 2, screen_height // 2 + 50)
-            screen.blit(score, scoreRect)
+        try:
+            if death_count == 0:
+                text = font.render("Press any Key to Start", True, (0, 255, 0))
+            elif death_count > 0:
+                text = font.render("Press any Key to Restart", True, (0, 255, 0))
+                score = font.render("Your Score: " + str(points), True, (0, 255, 0))
+                scoreRect = score.get_rect()
+                scoreRect.center = (screen_width // 2, screen_height // 2 + 50)
+                screen.blit(score, scoreRect)
+        except:
+            print("error occured")
+            exit()
+        
+        
         textRect = text.get_rect()
         textRect.center = (screen_width // 2, screen_height// 2)
         screen.blit(text, textRect)
